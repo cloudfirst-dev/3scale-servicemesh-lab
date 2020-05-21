@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: springboot
+  namespace: {{ .Values.appsNamespace }}
+spec:
+  hosts:
+  - '*'
+  gateways:
+  - my-gateway
+  http:
+  - route:
+    - destination:
+        host: springboot

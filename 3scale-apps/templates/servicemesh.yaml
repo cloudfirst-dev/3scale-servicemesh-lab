@@ -1,0 +1,38 @@
+apiVersion: maistra.io/v1
+kind: ServiceMeshControlPlane
+metadata:
+  name: basic-install
+  namespace: {{ .Values.smNamespace }}
+spec:
+  version: v1.1
+  istio:
+    global:
+      disablePolicyChecks: false
+      proxy:
+        accessLogFile: "/dev/stdout"
+    gateways:
+      istio-egressgateway:
+        autoscaleEnabled: false
+      istio-ingressgateway:
+        autoscaleEnabled: false
+        ior_enabled: true
+    mixer:
+      policy:
+        autoscaleEnabled: false
+      telemetry:
+        autoscaleEnabled: false
+    pilot:
+      autoscaleEnabled: false
+      traceSampling: 100
+    kiali:
+      enabled: true
+    grafana:
+      enabled: true
+    tracing:
+      enabled: true
+      jaeger:
+        template: all-in-one
+  threeScale:
+    enabled: true
+    PARAM_THREESCALE_ALLOW_INSECURE_CONN: true
+    PARAM_THREESCALE_LOG_LEVEL: DEBUG

@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: springboot
+  namespace: {{ .Values.appsNamespace }}
+  labels:
+    app: springboot
+spec:
+  ports:
+    - name: http-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: springboot
+    deploymentconfig: springboot
+  type: ClusterIP
+  sessionAffinity: None

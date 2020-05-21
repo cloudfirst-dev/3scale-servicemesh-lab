@@ -1,0 +1,80 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: backend-redis-storage
+  namespace: {{ .Values.namespace }}
+  finalizers:
+    - kubernetes.io/pvc-protection
+  labels:
+    app: 3scale-api-management
+    threescale_component: backend
+    threescale_component_element: redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: {{ .Values.storageClassName }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-storage
+  namespace: {{ .Values.namespace }}
+  finalizers:
+    - kubernetes.io/pvc-protection
+  labels:
+    app: 3scale-api-management
+    threescale_component: system
+    threescale_component_element: mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: {{ .Values.storageClassName }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: system-redis-storage
+  namespace: {{ .Values.namespace }}
+  finalizers:
+    - kubernetes.io/pvc-protection
+  labels:
+    app: 3scale-api-management
+    threescale_component: system
+    threescale_component_element: redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: {{ .Values.storageClassName }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: system-storage
+  namespace: {{ .Values.namespace }}
+  finalizers:
+    - kubernetes.io/pvc-protection
+  labels:
+    app: 3scale-api-management
+    threescale_component: system
+    threescale_component_element: app
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: {{ .Values.storageClassName }}
+  volumeMode: Filesystem

@@ -1,0 +1,67 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: springboot
+  namespace: {{ .Values.appsNamespace }}
+  labels:
+    app: springboot
+    app.kubernetes.io/component: springboot
+    app.kubernetes.io/instance: springboot
+    app.kubernetes.io/part-of: springboot
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - springboot
+        from:
+          kind: ImageStreamTag
+          namespace: 3scale-apps
+          name: 'springboot:latest'
+        lastTriggeredImage: >-
+          quay.io/cloudfirst/spring-boot-helloworld@sha256:51a54719568dc3a40b3a7ee2dc125c4979f8a1d0267d385e32362ea5c820a1f9
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: springboot
+    deploymentconfig: springboot
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: springboot
+        deploymentconfig: springboot
+        service-mesh.3scale.net/credentials: admin-credentials
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+        sidecar.istio.io/inject: 'true'
+    spec:
+      containers:
+        - name: springboot
+          image: >-
+            quay.io/cloudfirst/spring-boot-helloworld@sha256:51a54719568dc3a40b3a7ee2dc125c4979f8a1d0267d385e32362ea5c820a1f9
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler

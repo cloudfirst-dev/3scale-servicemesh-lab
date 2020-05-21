@@ -1,0 +1,16 @@
+apiVersion: apps.3scale.net/v1alpha1
+kind: APIManager
+metadata:
+  name: example-apimanager
+  namespace: 3scale-demo
+spec:
+  wildcardDomain: {{ .Values.wildcardDomain }}
+  system:
+    fileStorage:
+      persistentVolumeClaim:
+        storageClassName: {{ .Values.storageClassName }}
+  apicast:
+    productionSpec:
+      replicas: 1
+    stagingSpec:
+      replicas: 1
